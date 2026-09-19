@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ElecCalc PVS | ระบบช่วยคำนวณออกแบบระบบไฟฟ้า</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"Noto Sans Thai"', 'sans-serif'],
+          display: ['Kanit', '"Noto Sans Thai"', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            50: '#eff9ff', 100: '#dcf1ff', 200: '#b2e4ff', 300: '#6fd0ff',
+            400: '#25b7ff', 500: '#009cf5', 600: '#007dd1', 700: '#0064a8',
+            800: '#06548a', 900: '#0b4672', 950: '#072c49',
+          },
+          amp: {
+            50: '#fff8ed', 100: '#ffefd4', 200: '#ffdaa8', 300: '#ffc070',
+            400: '#ff9d36', 500: '#ff7d0e', 600: '#f06104', 700: '#c74807',
+            800: '#9e390e', 900: '#7f300f',
+          }
+        }
+      }
+    }
+  }
+</script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+        <a href="#home" class="flex items-center gap-2.5 group">
+          <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-amp-500 flex items-center justify-center shadow-sm shadow-brand-300/50">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          </span>
+          <span class="font-display leading-tight">
+            <span class="block text-base font-bold text-slate-900 tracking-tight">ElecCalc <span class="text-brand-600">PVS</span></span>
+            <span class="block text-[11px] font-medium text-slate-400 -mt-0.5">เครื่องมือคำนวณออกแบบระบบไฟฟ้า</span>
+          </span>
+        </a>
+      </div>
+      <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+        ระบบทวิภาคี · ปวส.
+      </span>
+    </div>
+  </header>
+
+  <div class="max-w-[1400px] mx-auto flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed lg:sticky top-16 left-0 z-30 w-72 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 -translate-x-full lg:translate-x-0 transition-transform duration-200 overflow-y-auto">
+      <nav class="p-4 space-y-6">
+
+        <div>
+          <p class="px-2 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">ทั่วไป</p>
+          <a data-nav href="#home" class="nav-link">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            หน้าแรก
+          </a>
+        </div>
+
+        <div>
+          <p class="px-2 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">ข้อมูลอ้างอิง</p>
+          <div class="space-y-1">
+            <a data-nav href="#wire-table" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 6a2 2 0 012-2h12a2 2 0 012 2M4 6v12a2 2 0 002 2h12a2 2 0 002-2V6m-9 4h4m-4 4h4m-8-8h.01m-.01 4h.01m-.01 4h.01"/></svg>
+              ตารางขนาดสายไฟ
+            </a>
+            <a data-nav href="#conduit-fill" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7zM8 9l3 3-3 3M13 15h3"/></svg>
+              จำนวนสายในท่อร้อยสาย
+            </a>
+            <a data-nav href="#breaker-table" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7zM4 4l16 16"/></svg>
+              พิกัดเซอร์กิตเบรกเกอร์
+            </a>
+            <a data-nav href="#ac-load-table" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14a5 5 0 015-5c1.5-3 4-4 6-3 2 1 3 3 2.5 5a4 4 0 01-1 8H7a4 4 0 01-3-6.5z"/></svg>
+              ตารางโหลดเครื่องปรับอากาศ
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p class="px-2 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">คำนวณวงจรย่อย</p>
+          <div class="space-y-1">
+            <a data-nav href="#calc-lighting" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.5.5.8 1.1.8 1.8V16h6.4v-.7c0-.7.3-1.3.8-1.8A6 6 0 0012 3z"/></svg>
+              วงจรย่อยแสงสว่าง
+            </a>
+            <a data-nav href="#calc-outlet" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v6m0 0a3 3 0 013 3v1a3 3 0 01-3 3 3 3 0 01-3-3v-1a3 3 0 013-3zm-6 6h.01M18 15h.01M4 21h16"/></svg>
+              วงจรย่อยเต้ารับ
+            </a>
+            <a data-nav href="#calc-heater" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              เครื่องทำน้ำอุ่น
+            </a>
+            <a data-nav href="#calc-ac" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14a5 5 0 015-5c1.5-3 4-4 6-3 2 1 3 3 2.5 5a4 4 0 01-1 8H7a4 4 0 01-3-6.5z"/></svg>
+              เครื่องปรับอากาศ
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p class="px-2 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">สายป้อน / สายประธาน</p>
+          <div class="space-y-1">
+            <a data-nav href="#calc-feeder" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/></svg>
+              คำนวณสายป้อน
+            </a>
+            <a data-nav href="#calc-main" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.5-6.5l-2.1 2.1M8.6 15.4l-2.1 2.1m10 0l-2.1-2.1M8.6 8.6L6.5 6.5"/></svg>
+              คำนวณสายเมน (สายประธาน)
+            </a>
+          </div>
+        </div>
+
+      </nav>
+    </aside>
+    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 z-20 hidden lg:hidden"></div>
+
+    <!-- Main content -->
+    <main class="flex-1 min-w-0 px-4 sm:px-6 py-6 sm:py-8">
+
+      <!-- HOME -->
+      <section id="page-home" class="page-section">
+        <div class="rounded-2xl bg-gradient-to-br from-brand-600 via-brand-600 to-amp-600 text-white p-7 sm:p-10 shadow-lg shadow-brand-200 relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 w-56 h-56 bg-white/10 rounded-full"></div>
+          <div class="absolute right-16 bottom-0 w-32 h-32 bg-white/10 rounded-full"></div>
+          <div class="relative">
+            <span class="inline-block text-xs font-semibold bg-white/20 px-3 py-1 rounded-full mb-3">งานออกแบบระบบไฟฟ้า · ปวส.</span>
+            <h1 class="font-display text-2xl sm:text-4xl font-bold leading-tight max-w-xl">เครื่องมือช่วยคำนวณ<br/>ออกแบบระบบไฟฟ้า</h1>
+            <p class="mt-3 max-w-xl text-brand-50/90 text-sm sm:text-base">รวมตารางข้อมูลสายไฟ และเครื่องคำนวณขนาดสายไฟ-เบรกเกอร์สำหรับวงจรย่อยที่ใช้บ่อย พร้อมสูตรและหลักการอ้างอิงตามมาตรฐาน วสท.</p>
+            <a href="#wire-table" data-nav-jump class="inline-flex items-center gap-2 mt-5 bg-white text-brand-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-brand-50 transition shadow-sm">
+              เริ่มดูตารางสายไฟ
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <h2 class="font-display text-lg font-bold text-slate-800 mt-8 mb-4">หมวดเครื่องมือ</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          <a href="#wire-table" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-brand-50 text-brand-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 6a2 2 0 012-2h12a2 2 0 012 2M4 6v12a2 2 0 002 2h12a2 2 0 002-2V6m-9 4h4m-4 4h4m-8-8h.01m-.01 4h.01m-.01 4h.01"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">ตารางขนาดสายไฟ</h3>
+            <p class="text-sm text-slate-500 mt-1">ค้นหาพิกัดกระแสสายไฟทองแดง THW ตามขนาดพื้นที่หน้าตัด</p>
+          </a>
+
+          <a href="#conduit-fill" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-indigo-50 text-indigo-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7zM8 9l3 3-3 3M13 15h3"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">จำนวนสายในท่อร้อยสาย</h3>
+            <p class="text-sm text-slate-500 mt-1">ตรวจจำนวนสายไฟสูงสุดที่ร้อยในท่อขนาดต่างๆ ได้ตามมาตรฐาน</p>
+          </a>
+
+          <a href="#breaker-table" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-rose-50 text-rose-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7zM4 4l16 16"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">พิกัดเซอร์กิตเบรกเกอร์</h3>
+            <p class="text-sm text-slate-500 mt-1">ตารางขนาดเฟรมและพิกัดตัดวงจรของเบรกเกอร์ MCB / MCCB / ACB</p>
+          </a>
+
+          <a href="#ac-load-table" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-sky-50 text-sky-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 14a5 5 0 015-5c1.5-3 4-4 6-3 2 1 3 3 2.5 5a4 4 0 01-1 8H7a4 4 0 01-3-6.5z"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">ตารางโหลดเครื่องปรับอากาศ</h3>
+            <p class="text-sm text-slate-500 mt-1">ตารางที่ 7.4 เทียบขนาดความเย็น (TR/BTUH) กับค่าโหลด (kVA)</p>
+          </a>
+
+          <a href="#calc-lighting" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-amber-50 text-amber-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.5.5.8 1.1.8 1.8V16h6.4v-.7c0-.7.3-1.3.8-1.8A6 6 0 0012 3z"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">วงจรย่อยแสงสว่าง</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟและเบรกเกอร์สำหรับวงจรไฟแสงสว่าง</p>
+          </a>
+
+          <a href="#calc-outlet" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-emerald-50 text-emerald-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v6m0 0a3 3 0 013 3v1a3 3 0 01-3 3 3 3 0 01-3-3v-1a3 3 0 013-3zm-6 6h.01M18 15h.01M4 21h16"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">วงจรย่อยเต้ารับ</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟและเบรกเกอร์สำหรับวงจรเต้ารับ</p>
+          </a>
+
+          <a href="#calc-heater" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-rose-50 text-rose-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">เครื่องทำน้ำอุ่น</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟและเบรกเกอร์เฉพาะเครื่องทำน้ำอุ่น</p>
+          </a>
+
+          <a href="#calc-ac" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-sky-50 text-sky-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 14a5 5 0 015-5c1.5-3 4-4 6-3 2 1 3 3 2.5 5a4 4 0 01-1 8H7a4 4 0 01-3-6.5z"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">เครื่องปรับอากาศ</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟและเบรกเกอร์สำหรับเครื่องปรับอากาศ</p>
+          </a>
+
+          <a href="#calc-feeder" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-slate-100 text-slate-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h10M4 18h16"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">คำนวณสายป้อน</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายป้อนรวมโหลดจากแผงย่อยหลายวงจร</p>
+            <span class="badge-soon">เร็วๆ นี้</span>
+          </a>
+
+          <a href="#calc-main" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-slate-100 text-slate-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.5-6.5l-2.1 2.1M8.6 15.4l-2.1 2.1m10 0l-2.1-2.1M8.6 8.6L6.5 6.5"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">คำนวณสายเมน (สายประธาน)</h3>
+            <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายเมนของอาคารจากโหลดรวมทั้งหมด</p>
+            <span class="badge-soon">เร็วๆ นี้</span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- WIRE TABLE PAGE -->
+      <section id="page-wire-table" class="page-section hidden">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">ตารางขนาดสายไฟ</h1>
+            <p class="text-sm text-slate-500 mt-1">รวมตารางพิกัดกระแสสายไฟตามมาตรฐาน วสท. แยกตามชนิดสายและลักษณะการเดินสาย เลือกตารางที่ต้องการด้านล่าง</p>
+          </div>
+        </div>
+
+        <!-- Table picker -->
+        <div id="wireTablePicker" class="mt-5 flex flex-wrap gap-2"></div>
+
+        <!-- Selected table content -->
+        <div id="wireTableContent" class="mt-4 space-y-4"></div>
+      </section>
+
+      <!-- CONDUIT FILL TABLE PAGE -->
+      <section id="page-conduit-fill" class="page-section hidden">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">จำนวนสายในท่อร้อยสาย</h1>
+            <p class="text-sm text-slate-500 mt-1">ตารางจำนวนสายไฟฟ้าสูงสุดที่ร้อยในท่อร้อยสายแต่ละขนาดได้ ตามมาตรฐาน วสท. แยกตามชนิดสาย</p>
+          </div>
+        </div>
+
+        <!-- Table picker -->
+        <div id="conduitFillTablePicker" class="mt-5 flex flex-wrap gap-2"></div>
+
+        <!-- Selected table content -->
+        <div id="conduitFillTableContent" class="mt-4 space-y-4"></div>
+      </section>
+
+      <!-- CIRCUIT BREAKER TABLE PAGE -->
+      <section id="page-breaker-table" class="page-section hidden">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">พิกัดเซอร์กิตเบรกเกอร์</h1>
+            <p class="text-sm text-slate-500 mt-1">ตารางขนาดเฟรม (Ampere Frame) และพิกัดตัดวงจร (Ampere Trip) ของเบรกเกอร์แต่ละชนิด</p>
+          </div>
+        </div>
+
+        <div id="breakerTableContent" class="mt-5 space-y-4"></div>
+      </section>
+
+      <!-- AC LOAD TABLE PAGE -->
+      <section id="page-ac-load-table" class="page-section hidden">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">ตารางโหลดเครื่องปรับอากาศ</h1>
+            <p class="text-sm text-slate-500 mt-1">ตารางที่ 7.4 — ค่าโหลดของเครื่องปรับอากาศแบบแยกส่วน (Split Type) 1 เฟส 230V</p>
+          </div>
+        </div>
+
+        <div id="acLoadTableContent" class="mt-5 space-y-4"></div>
+      </section>
+
+      <!-- LIGHTING CIRCUIT CALCULATOR -->
+      <section id="page-calc-lighting" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณวงจรย่อยแสงสว่าง</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟและเบรกเกอร์ที่เหมาะสมสำหรับวงจรย่อยไฟแสงสว่าง จากผลรวมโหลดดวงโคม</p>
+        </div>
+
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) กระแสโหลด:</span> I = P / V โดย P คือกำลังไฟฟ้ารวมของดวงโคม (VA), V คือแรงดันไฟฟ้า (V)</p>
+            <p><span class="font-semibold text-slate-700">2) กระแสออกแบบ:</span> วงจรแสงสว่างถือเป็นโหลดต่อเนื่อง ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I)</p>
+            <p><span class="font-semibold text-slate-700">3) ขนาดสายไฟ:</span> เลือกขนาดสายที่มีพิกัดกระแสไม่น้อยกว่ากระแสออกแบบ โดยอ้างอิงตารางพิกัดกระแสตามชนิดสายและลักษณะการติดตั้งที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">4) ขนาดเบรกเกอร์:</span> เลือกพิกัดมาตรฐานที่ไม่น้อยกว่ากระแสออกแบบ และไม่เกินพิกัดกระแสของสายไฟที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">5) จำนวนจุดต่อวงจร:</span> ไม่ควรต่อดวงโคมเกิน 20 จุดต่อวงจรย่อย ตามแนวทางการออกแบบทั่วไป เพื่อจำกัดผลกระทบหากวงจรขัดข้อง</p>
+          </div>
+        </details>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load list -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <label class="text-sm block">
+                <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                <input id="lightingVoltage" type="number" value="220" min="1" class="calc-input" />
+              </label>
+
+              <div class="mt-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-slate-700">รายการดวงโคม / หลอดไฟ</span>
+                  <button id="lightingAddRow" type="button" class="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+                    เพิ่มรายการ
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs font-semibold text-slate-400 px-1 mb-1">
+                  <span>จำนวน (จุด)</span>
+                  <span>กำลังไฟฟ้า/จุด (VA)</span>
+                  <span></span>
+                </div>
+                <div id="lightingRows" class="space-y-2"></div>
+
+                <p class="mt-2 text-xs text-slate-400">หมายเหตุ: กรณีไม่ทราบพิกัดจากดวงโคม ให้ประมาณค่าหลอด FL ที่ 100 VA/จุด และหลอด LED ที่ 40-50 VA/จุด</p>
+              </div>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div id="lightingCableType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="lightingGroup" class="calc-input"></select>
+                  <span id="lightingGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="lightingTrayTypeWrap" class="hidden">
+                  <label class="text-sm block">
+                    <span class="block text-slate-600 mb-1.5">รูปแบบรางเคเบิล</span>
+                    <select id="lightingTrayType" class="calc-input"></select>
+                  </label>
+                </div>
+
+                <div id="lightingCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="lightingCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="lightingCoreType" class="grid grid-cols-2 gap-2"></div>
+                  <p id="lightingCoreNote" class="text-xs text-amber-600 mt-1.5 hidden"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="lightingResult" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- OUTLET CIRCUIT CALCULATOR -->
+      <section id="page-calc-outlet" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณวงจรย่อยเต้ารับ</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟ เบรกเกอร์ และท่อร้อยสาย สำหรับวงจรย่อยเต้ารับ (สาย IEC01)</p>
+        </div>
+
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) โหลดมาตรฐานต่อจุด:</span> เต้ารับทั่วไป 1 จุด คิดโหลด 180 VA/จุด ตามแนวทางการออกแบบทั่วไป หากมีเต้ารับสำหรับเครื่องใช้ไฟฟ้าเฉพาะที่ทราบพิกัดจริง ให้ระบุค่า VA ตามพิกัดนั้นแทน</p>
+            <p><span class="font-semibold text-slate-700">2) กระแสโหลด:</span> I = P / V โดย P คือกำลังไฟฟ้ารวมของเต้ารับทั้งหมดในวงจร (VA), V คือแรงดันไฟฟ้า (V)</p>
+            <p><span class="font-semibold text-slate-700">3) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
+            <p><span class="font-semibold text-slate-700">4) ขนาดสายไฟ:</span> เลือกขนาดสาย IEC01 ที่มีพิกัดกระแสไม่น้อยกว่ากระแสออกแบบ ตามลักษณะการติดตั้งที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดเบรกเกอร์:</span> เลือกพิกัดมาตรฐานที่ไม่น้อยกว่ากระแสออกแบบ และไม่เกินพิกัดกระแสของสายไฟที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">6) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว)</p>
+          </div>
+        </details>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load list -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <label class="text-sm block">
+                <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                <input id="outletVoltage" type="number" value="220" min="1" class="calc-input" />
+              </label>
+
+              <div class="mt-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-slate-700">รายการเต้ารับ</span>
+                  <button id="outletAddRow" type="button" class="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+                    เพิ่มรายการ
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-2 text-xs font-semibold text-slate-400 px-1 mb-1">
+                  <span>จำนวนเต้ารับ (จุด)</span>
+                  <span>กำลังไฟฟ้า/จุด (VA)</span>
+                  <span></span>
+                </div>
+                <div id="outletRows" class="space-y-2"></div>
+
+                <p class="mt-2 text-xs text-slate-400">หมายเหตุ: เต้ารับทั่วไปใช้ 180 VA/จุด หากมีเต้ารับเฉพาะสำหรับเครื่องใช้ไฟฟ้าที่ทราบพิกัดกำลังไฟจริง ให้เพิ่มรายการแยกและระบุค่า VA ตามจริง</p>
+              </div>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div class="toggle-btn active w-full cursor-default" style="pointer-events:none;">IEC01</div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="outletGroup" class="calc-input"></select>
+                  <span id="outletGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="outletCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="outletCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="outletCoreType" class="grid grid-cols-2 gap-2"></div>
+                  <p id="outletCoreNote" class="text-xs text-amber-600 mt-1.5 hidden"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="outletResult" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- CALC PLACEHOLDER PAGES -->
+      <!-- WATER HEATER CIRCUIT CALCULATOR -->
+      <section id="page-calc-heater" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณวงจรย่อยเครื่องทำน้ำอุ่น</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟ เบรกเกอร์ และท่อร้อยสาย สำหรับวงจรย่อยเครื่องทำน้ำอุ่นไฟฟ้า (สาย IEC01)</p>
+        </div>
+
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) กระแสโหลด:</span> I = P / V โดย P คือกำลังไฟฟ้าเครื่องทำน้ำอุ่น (VA) ตามป้ายพิกัดเครื่อง, V คือแรงดันไฟฟ้า (V)</p>
+            <p><span class="font-semibold text-slate-700">2) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
+            <p><span class="font-semibold text-slate-700">3) ขนาดสายไฟ:</span> เลือกขนาดสาย IEC01 ที่มีพิกัดกระแสไม่น้อยกว่ากระแสออกแบบ ตามลักษณะการติดตั้งที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">4) ขนาดเบรกเกอร์:</span> เลือกพิกัดมาตรฐานที่ไม่น้อยกว่ากระแสออกแบบ และไม่เกินพิกัดกระแสของสายไฟที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว)</p>
+            <p><span class="font-semibold text-slate-700">6) ข้อควรระวังเฉพาะเครื่องทำน้ำอุ่น:</span> วงจรนี้ควรแยกวงจรเฉพาะ ไม่ใช้ร่วมกับโหลดอื่น และต้องติดตั้งเครื่องตัดไฟรั่ว (ELCB/RCD) เนื่องจากเป็นอุปกรณ์ที่ใช้งานใกล้น้ำ</p>
+          </div>
+        </details>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <div class="grid grid-cols-2 gap-3">
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                  <input id="heaterVoltage" type="number" value="220" min="1" class="calc-input" />
+                </label>
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">กำลังไฟฟ้าเครื่องทำน้ำอุ่น (VA)</span>
+                  <input id="heaterVa" type="number" min="0" placeholder="เช่น 3500" class="calc-input" />
+                </label>
+              </div>
+
+              <p class="mt-3 text-xs text-slate-400">หมายเหตุ: ดูค่ากำลังไฟฟ้า (VA หรือ W) ได้จากป้ายพิกัดของเครื่องทำน้ำอุ่น เครื่องทำน้ำอุ่นทั่วไปมีพิกัดประมาณ 2,500-4,500 VA</p>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div class="toggle-btn active w-full cursor-default" style="pointer-events:none;">IEC01</div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="heaterGroup" class="calc-input"></select>
+                  <span id="heaterGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="heaterCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="heaterCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="heaterCoreType" class="grid grid-cols-2 gap-2"></div>
+                  <p id="heaterCoreNote" class="text-xs text-amber-600 mt-1.5 hidden"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="heaterResult" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <section id="page-calc-ac" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณวงจรย่อยเครื่องปรับอากาศ</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟ เบรกเกอร์ และท่อร้อยสาย สำหรับวงจรย่อยเครื่องปรับอากาศ (เลือกได้ทั้งสาย IEC01 และ NYY)</p>
+        </div>
+
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) ค่าโหลด:</span> เลือกขนาดเครื่องปรับอากาศ (BTU) เพื่อดึงค่าโหลด (kVA) จากตารางที่ 7.4 แล้วแปลงเป็นกำลังไฟฟ้า P = kVA × 1000 (VA)</p>
+            <p><span class="font-semibold text-slate-700">2) กระแสโหลด:</span> I = P / V โดย V คือแรงดันไฟฟ้า (V)</p>
+            <p><span class="font-semibold text-slate-700">3) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
+            <p><span class="font-semibold text-slate-700">4) ขนาดสายไฟและเบรกเกอร์:</span> เลือกจากตารางพิกัดกระแสตามชนิดสายและลักษณะการติดตั้งที่เลือก โดยกำหนดขนาดสายขั้นต่ำไม่น้อยกว่า 2.5 ตร.มม. เนื่องจากเป็นวงจรที่มีกระแสกระชากขณะสตาร์ทคอมเพรสเซอร์</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว) โดยอ้างอิงตาราง A-1 สำหรับสาย IEC01 หรือตาราง A-2 สำหรับสาย NYY ตามชนิดสายที่เลือก</p>
+          </div>
+        </details>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <label class="text-sm block mb-3">
+                <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                <input id="acVoltage" type="number" value="220" min="1" class="calc-input" />
+              </label>
+
+              <span class="block text-sm text-slate-600 mb-1.5">ขนาดเครื่องปรับอากาศ</span>
+              <div id="acBtuType" class="grid grid-cols-2 gap-2"></div>
+              <p id="acKvaNote" class="mt-2 text-xs text-slate-400"></p>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div id="acCableType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="acGroup" class="calc-input"></select>
+                  <span id="acGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="acTrayTypeWrap" class="hidden">
+                  <label class="text-sm block">
+                    <span class="block text-slate-600 mb-1.5">ชนิดรางเคเบิล</span>
+                    <select id="acTrayType" class="calc-input"></select>
+                  </label>
+                </div>
+
+                <div id="acCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="acCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="acCoreType" class="grid grid-cols-2 gap-2"></div>
+                  <p id="acCoreNote" class="text-xs text-amber-600 mt-1.5 hidden"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="acResult" class="space-y-4"></div>
+        </div>
+      </section>
+
+      <section id="page-calc-feeder" class="page-section hidden"></section>
+
+      <section id="page-calc-main" class="page-section hidden"></section>
+
+    </main>
+  </div>
+
+  <script src="js/lib/tablePicker.js"></script>
+  <script src="js/lib/circuitCalc.js"></script>
+  <script src="js/data/wireTable.js"></script>
+  <script src="js/data/conduitFillTable.js"></script>
+  <script src="js/data/breakerTable.js"></script>
+  <script src="js/data/acLoadTable.js"></script>
+  <script src="js/data/installationGroups.js"></script>
+  <script src="js/wireTable.js"></script>
+  <script src="js/conduitFillTable.js"></script>
+  <script src="js/breakerTable.js"></script>
+  <script src="js/acLoadTable.js"></script>
+  <script src="js/lightingCircuit.js"></script>
+  <script src="js/outletCircuit.js"></script>
+  <script src="js/heaterCircuit.js"></script>
+  <script src="js/acCircuit.js"></script>
+  <script src="js/placeholders.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

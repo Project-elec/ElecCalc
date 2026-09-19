@@ -1,0 +1,133 @@
+/* Small custom layer on top of Tailwind utilities loaded from CDN */
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.65rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569; /* slate-600 */
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.nav-link:hover {
+  background-color: #f1f5f9; /* slate-100 */
+  color: #0f172a; /* slate-900 */
+}
+
+.nav-link.active {
+  background-color: #eff9ff; /* brand-50 */
+  color: #007dd1; /* brand-600 */
+  font-weight: 600;
+}
+
+.tool-card {
+  position: relative;
+  display: block;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.15);
+  border-color: #b2e4ff;
+}
+
+.tool-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.badge-soon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.page-section.hidden {
+  display: none;
+}
+
+#wireTableContent table th,
+#wireTableContent table td {
+  border-right: 1px solid #f1f5f9;
+}
+
+#wireTableContent table th:last-child,
+#wireTableContent table td:last-child {
+  border-right: none;
+}
+
+@media (max-width: 1023px) {
+  #sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+.calc-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  background: #f8fafc;
+  font-size: 0.875rem;
+  color: #0f172a;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.calc-input:focus {
+  outline: none;
+  border-color: #25b7ff;
+  background: #fff;
+}
+
+.toggle-btn {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
+  background: #f8fafc;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.toggle-btn:hover {
+  border-color: #6fd0ff;
+}
+
+.toggle-btn.active {
+  background: #007dd1;
+  border-color: #007dd1;
+  color: #fff;
+}
+
+.toggle-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
