@@ -8,6 +8,7 @@
     'conduit-fill',
     'breaker-table',
     'ac-load-table',
+    'ground-wire-table',
     'calc-lighting',
     'calc-outlet',
     'calc-heater',

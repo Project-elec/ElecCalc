@@ -47,6 +47,33 @@ function pickWireAndBreaker(wireTable, cols, designCurrent, standardSizes, break
 }
 
 /**
+ * เหมือน pickWireAndBreaker แต่รองรับการเดินสายขนานกันหลายเส้นต่อเฟส (Parallel Conductors)
+ * ใช้เมื่อกระแสออกแบบสูงเกินกว่าสายเส้นเดียวในตารางจะรับไหว (เช่น สายเมนของอาคารขนาดใหญ่)
+ * ไล่หาจำนวนเส้นขนานที่น้อยที่สุดก่อน (เริ่มจาก 1) แล้วจึงไล่หาขนาดสายที่เล็กที่สุดในจำนวนเส้นนั้นๆ
+ * ที่พิกัดกระแสรวม (ampacity x parallelCount) ไม่น้อยกว่ากระแสออกแบบ และมีเบรกเกอร์มาตรฐานที่
+ * ไม่น้อยกว่ากระแสออกแบบและไม่เกินพิกัดกระแสรวมได้ จำกัดจำนวนเส้นขนานสูงสุดไว้ที่ maxParallel
+ * (ค่าเริ่มต้น 4 เส้น/เฟส ตามแนวทางปฏิบัติทั่วไป) คืนค่า { wire: {size, ampacity}, parallelCount,
+ * totalCapacity, breaker, frame } หรือ null ถ้าไม่พบ
+ */
+function pickParallelWireAndBreaker(wireTable, cols, designCurrent, standardSizes, breakerRows, minSize = 0, maxParallel = 4) {
+  for (let parallelCount = 1; parallelCount <= maxParallel; parallelCount += 1) {
+    for (const row of wireTable.rows) {
+      if (row.size < minSize) continue;
+      const values = cols.map((c) => row.values[c]).filter((v) => v !== null);
+      if (!values.length) continue;
+      const ampacity = Math.min(...values);
+      const totalCapacity = ampacity * parallelCount;
+      if (totalCapacity < designCurrent) continue;
+      const breaker = standardSizes.find((b) => b >= designCurrent && b <= totalCapacity);
+      if (breaker !== undefined) {
+        return { wire: { size: row.size, ampacity }, parallelCount, totalCapacity, breaker, frame: findFrameForTrip(breakerRows, breaker) };
+      }
+    }
+  }
+  return null;
+}
+
+/**
  * หาขนาดท่อร้อยสายที่เล็กที่สุดจากตาราง A-1 (IEC01) หรือ A-2 (NYY) ที่รองรับจำนวนตัวนำได้พอ
  * ใช้ได้เฉพาะสายแกนเดี่ยว (ตารางนับจำนวนตัวนำเดี่ยวที่ร้อยรวมในท่อ ไม่ใช่สายหลายแกน)
  */
@@ -68,4 +95,13 @@ function pickConduitSize(conduitFillTables, cableType, wireSize, conductorCount)
     }
   }
   return null;
+}
+
+/**
+ * หาขนาดสายดิน (G) ที่เล็กที่สุดจากตารางที่ 6.2 ที่รองรับพิกัดเครื่องป้องกันกระแสเกิน (breakerRating)
+ * ได้ โดยอิงตามพิกัด/ขนาดปรับตั้งของเครื่องป้องกันกระแสเกินที่อยู่ด้านหน้าบริภัณฑ์ไฟฟ้านั้น
+ * คืนค่าแถวของตาราง { maxBreaker, size, note } หรือ null ถ้าพิกัดเกินกว่าที่ตารางมีข้อมูล
+ */
+function pickGroundWireSize(groundWireTable, breakerRating) {
+  return groundWireTable.find((row) => breakerRating <= row.maxBreaker) || null;
 }

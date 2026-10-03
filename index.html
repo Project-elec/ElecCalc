@@ -91,6 +91,10 @@
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14a5 5 0 015-5c1.5-3 4-4 6-3 2 1 3 3 2.5 5a4 4 0 01-1 8H7a4 4 0 01-3-6.5z"/></svg>
               ตารางโหลดเครื่องปรับอากาศ
             </a>
+            <a data-nav href="#ground-wire-table" class="nav-link">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v7m0 0l-3-3m3 3l3-3M5 14h14M5 14a2 2 0 00-2 2v1a2 2 0 002 2h14a2 2 0 002-2v-1a2 2 0 00-2-2M5 14V9a2 2 0 012-2h10a2 2 0 012 2v5"/></svg>
+              ขนาดสายดิน (ตารางที่ 6.2)
+            </a>
           </div>
         </div>
 
@@ -188,6 +192,14 @@
             <p class="text-sm text-slate-500 mt-1">ตารางที่ 7.4 เทียบขนาดความเย็น (TR/BTUH) กับค่าโหลด (kVA)</p>
           </a>
 
+          <a href="#ground-wire-table" data-nav-jump class="tool-card">
+            <span class="tool-icon bg-lime-50 text-lime-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v7m0 0l-3-3m3 3l3-3M5 14h14M5 14a2 2 0 00-2 2v1a2 2 0 002 2h14a2 2 0 002-2v-1a2 2 0 00-2-2M5 14V9a2 2 0 012-2h10a2 2 0 012 2v5"/></svg>
+            </span>
+            <h3 class="font-semibold text-slate-800">ขนาดสายดิน (G)</h3>
+            <p class="text-sm text-slate-500 mt-1">ตารางที่ 6.2 ขนาดต่ำสุดของสายดินของบริภัณฑ์ไฟฟ้า ตามพิกัดเครื่องป้องกันกระแสเกิน</p>
+          </a>
+
           <a href="#calc-lighting" data-nav-jump class="tool-card">
             <span class="tool-icon bg-amber-50 text-amber-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.5.5.8 1.1.8 1.8V16h6.4v-.7c0-.7.3-1.3.8-1.8A6 6 0 0012 3z"/></svg>
@@ -226,7 +238,6 @@
             </span>
             <h3 class="font-semibold text-slate-800">คำนวณสายป้อน</h3>
             <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายป้อนรวมโหลดจากแผงย่อยหลายวงจร</p>
-            <span class="badge-soon">เร็วๆ นี้</span>
           </a>
 
           <a href="#calc-main" data-nav-jump class="tool-card">
@@ -235,7 +246,6 @@
             </span>
             <h3 class="font-semibold text-slate-800">คำนวณสายเมน (สายประธาน)</h3>
             <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายเมนของอาคารจากโหลดรวมทั้งหมด</p>
-            <span class="badge-soon">เร็วๆ นี้</span>
           </a>
 
         </div>
@@ -295,6 +305,18 @@
         </div>
 
         <div id="acLoadTableContent" class="mt-5 space-y-4"></div>
+      </section>
+
+      <!-- GROUND WIRE TABLE PAGE -->
+      <section id="page-ground-wire-table" class="page-section hidden">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">ขนาดสายดิน (G)</h1>
+            <p class="text-sm text-slate-500 mt-1">ตารางที่ 6.2 — ขนาดต่ำสุดของสายดินของบริภัณฑ์ไฟฟ้า ตามพิกัดหรือขนาดปรับตั้งของเครื่องป้องกันกระแสเกิน</p>
+          </div>
+        </div>
+
+        <div id="groundWireTableContent" class="mt-5 space-y-4"></div>
       </section>
 
       <!-- LIGHTING CIRCUIT CALCULATOR -->
@@ -376,6 +398,17 @@
                     <span class="block text-slate-600 mb-1.5">รูปแบบรางเคเบิล</span>
                     <select id="lightingTrayType" class="calc-input"></select>
                   </label>
+
+                  <label class="text-sm block mt-4">
+                    <span class="block text-slate-600 mb-1.5">รูปแบบการติดตั้งบนราง</span>
+                    <select id="lightingTrayArrangement" class="calc-input"></select>
+                  </label>
+                </div>
+
+                <div id="lightingArrangementWrap" class="hidden">
+                  <span class="block text-sm text-slate-600 mb-1.5">รูปแบบการวางสาย</span>
+                  <div id="lightingArrangement" class="grid grid-cols-2 gap-2"></div>
+                  <p id="lightingArrangementNote" class="text-xs text-slate-400 mt-1.5"></p>
                 </div>
 
                 <div id="lightingCountWrap">
@@ -383,10 +416,11 @@
                   <div id="lightingCount" class="grid grid-cols-2 gap-2"></div>
                 </div>
 
-                <div>
+                <p id="lightingFixedCountNote" class="hidden text-xs text-slate-400"></p>
+
+                <div id="lightingCoreTypeWrap">
                   <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
                   <div id="lightingCoreType" class="grid grid-cols-2 gap-2"></div>
-                  <p id="lightingCoreNote" class="text-xs text-amber-600 mt-1.5 hidden"></p>
                 </div>
               </div>
             </div>
@@ -395,6 +429,26 @@
 
           <!-- Result -->
           <div id="lightingResult" class="space-y-4"></div>
+        </div>
+
+        <!-- Demand factor -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">คำนวณดีมานด์โหลด (ตารางที่ 9.1)</h2>
+          <p class="text-xs text-slate-400 mb-4">เครื่องมือเสริม ใช้ประมาณโหลดดีมานด์รวมของไฟแสงสว่างทั้งอาคาร แยกจากการเลือกสาย/เบรกเกอร์ของวงจรย่อยด้านบน</p>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1.5">ชนิดของอาคาร</span>
+              <select id="lightingDfBuildingType" class="calc-input"></select>
+            </label>
+
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">โหลดแสงสว่างติดตั้งจริงรวม (VA)</span>
+              <input id="lightingDfTotalVa" type="number" min="0" placeholder="เช่น 25000" class="calc-input" />
+            </label>
+          </div>
+
+          <div id="lightingDfResult" class="mt-3"></div>
         </div>
       </section>
 
@@ -420,7 +474,7 @@
             <p><span class="font-semibold text-slate-700">3) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
             <p><span class="font-semibold text-slate-700">4) ขนาดสายไฟ:</span> เลือกขนาดสาย IEC01 ที่มีพิกัดกระแสไม่น้อยกว่ากระแสออกแบบ ตามลักษณะการติดตั้งที่เลือก</p>
             <p><span class="font-semibold text-slate-700">5) ขนาดเบรกเกอร์:</span> เลือกพิกัดมาตรฐานที่ไม่น้อยกว่ากระแสออกแบบ และไม่เกินพิกัดกระแสของสายไฟที่เลือก</p>
-            <p><span class="font-semibold text-slate-700">6) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว)</p>
+            <p><span class="font-semibold text-slate-700">6) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (คำนวณให้ทั้งกรณีสายแกนเดี่ยวและหลายแกน)</p>
           </div>
         </details>
 
@@ -491,6 +545,26 @@
           <!-- Result -->
           <div id="outletResult" class="space-y-4"></div>
         </div>
+
+        <!-- Demand factor -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">คำนวณดีมานด์โหลด (ตารางที่ 9.2)</h2>
+          <p class="text-xs text-slate-400 mb-4">เครื่องมือเสริม ใช้ประมาณโหลดดีมานด์รวมของเต้ารับทั้งอาคาร แยกจากการเลือกสาย/เบรกเกอร์ของวงจรย่อยด้านบน ที่พักอาศัยไม่มีตารางแยก จึงใช้ดีมานด์แฟกเตอร์ 100% (นับรวมในโหลดแสงสว่างแล้ว)</p>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1.5">ชนิดของสถานที่</span>
+              <select id="outletDfBuildingType" class="calc-input"></select>
+            </label>
+
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">โหลดเต้ารับติดตั้งจริงรวม (VA)</span>
+              <input id="outletDfTotalVa" type="number" min="0" placeholder="เช่น 18000" class="calc-input" />
+            </label>
+          </div>
+
+          <div id="outletDfResult" class="mt-3"></div>
+        </div>
       </section>
 
       <!-- CALC PLACEHOLDER PAGES -->
@@ -515,7 +589,7 @@
             <p><span class="font-semibold text-slate-700">2) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
             <p><span class="font-semibold text-slate-700">3) ขนาดสายไฟ:</span> เลือกขนาดสาย IEC01 ที่มีพิกัดกระแสไม่น้อยกว่ากระแสออกแบบ ตามลักษณะการติดตั้งที่เลือก</p>
             <p><span class="font-semibold text-slate-700">4) ขนาดเบรกเกอร์:</span> เลือกพิกัดมาตรฐานที่ไม่น้อยกว่ากระแสออกแบบ และไม่เกินพิกัดกระแสของสายไฟที่เลือก</p>
-            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว)</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้ (คำนวณให้ทั้งกรณีสายแกนเดี่ยวและหลายแกน)</p>
             <p><span class="font-semibold text-slate-700">6) ข้อควรระวังเฉพาะเครื่องทำน้ำอุ่น:</span> วงจรนี้ควรแยกวงจรเฉพาะ ไม่ใช้ร่วมกับโหลดอื่น และต้องติดตั้งเครื่องตัดไฟรั่ว (ELCB/RCD) เนื่องจากเป็นอุปกรณ์ที่ใช้งานใกล้น้ำ</p>
           </div>
         </details>
@@ -576,6 +650,23 @@
           <!-- Result -->
           <div id="heaterResult" class="space-y-4"></div>
         </div>
+
+        <!-- Demand factor -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">คำนวณดีมานด์โหลด (ตารางที่ 9.3)</h2>
+          <p class="text-xs text-slate-400 mb-4">เครื่องมือเสริม ใช้ประมาณโหลดดีมานด์รวมของเครื่องทำน้ำอุ่นทุกวงจรในอาคาร แยกจากการเลือกสาย/เบรกเกอร์ของวงจรย่อยด้านบน วิธีคิด: วงจรที่มีโหลดมากที่สุด 2 วงจรแรกคิดร้อยละ 100 ส่วนที่เหลือคิดร้อยละ 25 (ใช้สูตรเดียวกันทุกประเภทอาคาร)</p>
+
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-slate-700">โหลดเครื่องทำน้ำอุ่นแต่ละวงจร (VA)</span>
+            <button id="heaterDfAddRow" type="button" class="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+              เพิ่มรายการ
+            </button>
+          </div>
+          <div id="heaterDfRows" class="space-y-2"></div>
+
+          <div id="heaterDfResult" class="mt-3"></div>
+        </div>
       </section>
 
       <section id="page-calc-ac" class="page-section hidden">
@@ -598,7 +689,7 @@
             <p><span class="font-semibold text-slate-700">2) กระแสโหลด:</span> I = P / V โดย V คือแรงดันไฟฟ้า (V)</p>
             <p><span class="font-semibold text-slate-700">3) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบวงจรย่อยทั่วไป</p>
             <p><span class="font-semibold text-slate-700">4) ขนาดสายไฟและเบรกเกอร์:</span> เลือกจากตารางพิกัดกระแสตามชนิดสายและลักษณะการติดตั้งที่เลือก โดยกำหนดขนาดสายขั้นต่ำไม่น้อยกว่า 2.5 ตร.มม. เนื่องจากเป็นวงจรที่มีกระแสกระชากขณะสตาร์ทคอมเพรสเซอร์</p>
-            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดที่รองรับจำนวนตัวนำในวงจรได้ (เฉพาะกรณีสายแกนเดี่ยว) โดยอ้างอิงตาราง A-1 สำหรับสาย IEC01 หรือตาราง A-2 สำหรับสาย NYY ตามชนิดสายที่เลือก</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดที่รองรับจำนวนตัวนำในวงจรได้ (คำนวณให้ทั้งกรณีสายแกนเดี่ยวและหลายแกน) โดยอ้างอิงตาราง A-1 สำหรับสาย IEC01 หรือตาราง A-2 สำหรับสาย NYY ตามชนิดสายที่เลือก</p>
           </div>
         </details>
 
@@ -661,30 +752,320 @@
           <!-- Result -->
           <div id="acResult" class="space-y-4"></div>
         </div>
+
+        <!-- Demand factor -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">คำนวณดีมานด์โหลด (ตารางที่ 9.3)</h2>
+          <p class="text-xs text-slate-400 mb-4">เครื่องมือเสริม ใช้ประมาณโหลดดีมานด์รวมของเครื่องปรับอากาศทุกเครื่องในอาคาร แยกจากการเลือกสาย/เบรกเกอร์ของวงจรย่อยด้านบน</p>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1.5">ชนิดของอาคาร</span>
+              <select id="acDfBuildingType" class="calc-input"></select>
+            </label>
+
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">โหลดเครื่องปรับอากาศติดตั้งจริงรวม (VA)</span>
+              <input id="acDfTotalVa" type="number" min="0" placeholder="เช่น 45000" class="calc-input" />
+            </label>
+          </div>
+
+          <div id="acDfResult" class="mt-3"></div>
+        </div>
       </section>
 
-      <section id="page-calc-feeder" class="page-section hidden"></section>
+      <section id="page-calc-feeder" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณสายป้อน (Feeder)</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดสายไฟ เบรกเกอร์ ท่อร้อยสาย และสายดิน สำหรับสายป้อนที่รวมโหลดจากวงจรย่อยหลายวงจรไปยังแผงย่อย</p>
+        </div>
 
-      <section id="page-calc-main" class="page-section hidden"></section>
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) กำลังไฟฟ้ารวม:</span> กรอกผลรวมกำลังไฟฟ้า (VA) ของวงจรย่อยทั้งหมดที่ต่อกับสายป้อนเส้นนี้</p>
+            <p><span class="font-semibold text-slate-700">2) กระแสโหลด:</span> ระบบ 1 เฟส ใช้ I = P / V, ระบบ 3 เฟส ใช้ I = P / (√3 × V)</p>
+            <p><span class="font-semibold text-slate-700">3) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I) ตามหลักการออกแบบทั่วไป</p>
+            <p><span class="font-semibold text-slate-700">4) ขนาดสายไฟและเบรกเกอร์:</span> เลือกจากตารางพิกัดกระแสตามลักษณะการติดตั้งที่เลือก (สาย IEC01 เลือกได้กลุ่มที่ 1 เดินในฝ้าเพดาน หรือกลุ่มที่ 2 เกาะผนัง/ฝังผนัง) เบรกเกอร์ไม่จำกัดขนาดเฟรมที่ 100A เหมือนวงจรย่อย เพราะสายป้อนมักต้องใช้พิกัดสูงกว่า</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดท่อร้อยสาย:</span> เลือกขนาดท่อที่เล็กที่สุดจากตาราง A-1 (สาย IEC01) ที่รองรับจำนวนตัวนำในวงจรได้</p>
+            <p><span class="font-semibold text-slate-700">6) ขนาดสายดิน (G):</span> เลือกขนาดต่ำสุดของสายดินตัวนำทองแดงจากตารางที่ 6.2 ตามพิกัดเบรกเกอร์ที่เลือกได้ (เครื่องป้องกันกระแสเกินที่อยู่ด้านหน้าบริภัณฑ์ไฟฟ้านั้น)</p>
+          </div>
+        </details>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <span class="block text-sm text-slate-600 mb-1.5">ระบบไฟฟ้า</span>
+              <div id="feederPhase" class="grid grid-cols-2 gap-2"></div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                  <input id="feederVoltage" type="number" value="220" min="1" class="calc-input" />
+                </label>
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">กำลังไฟฟ้ารวม (VA)</span>
+                  <input id="feederVa" type="number" min="0" placeholder="เช่น 15000" class="calc-input" />
+                </label>
+              </div>
+
+              <p class="mt-3 text-xs text-slate-400">หมายเหตุ: กรอกผลรวมกำลังไฟฟ้าของวงจรย่อยทั้งหมดที่ต่อกับสายป้อนเส้นนี้ (กรณีต้องการคิดตัวคูณความต้องการใช้ไฟ/Demand Factor ใช้เครื่องมือด้านล่างช่วยคำนวณ แล้วกดปุ่ม "ใช้ผลรวมนี้" เพื่อนำมากรอกในช่องนี้ได้)</p>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div class="toggle-btn active w-full cursor-default" style="pointer-events:none;">IEC01</div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="feederGroup" class="calc-input"></select>
+                  <span id="feederGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="feederCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="feederCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div id="feederCoreTypeWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="feederCoreType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="feederResult" class="space-y-4"></div>
+        </div>
+
+        <!-- Demand factor summary -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">สรุปดีมานด์โหลดรวม (ตัวช่วย)</h2>
+          <p class="text-xs text-slate-400 mb-4">นำผลดีมานด์โหลดที่คำนวณไว้จากแต่ละหน้าวงจรย่อย (ตารางที่ 9.1-9.3) มารวมกันที่นี่ แล้วกดปุ่มเพื่อนำผลรวมไปกรอกเป็น "กำลังไฟฟ้ารวม (VA)" ด้านบนได้ทันที</p>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดแสงสว่าง (VA)</span>
+              <input id="feederDfLighting" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเต้ารับ (VA)</span>
+              <input id="feederDfOutlet" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเครื่องทำน้ำอุ่น (VA)</span>
+              <input id="feederDfHeater" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเครื่องปรับอากาศ (VA)</span>
+              <input id="feederDfAc" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">โหลดดีมานด์อื่นๆ (VA)</span>
+              <input id="feederDfOther" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+          </div>
+
+          <div id="feederDfResult" class="mt-3"></div>
+
+          <button id="feederDfApplyBtn" type="button" class="mt-3 w-full sm:w-auto text-sm font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-100 rounded-xl px-5 py-2.5 transition-colors">
+            ใช้ผลรวมนี้เป็นกำลังไฟฟ้ารวม
+          </button>
+        </div>
+      </section>
+
+      <section id="page-calc-main" class="page-section hidden">
+        <div class="mb-1">
+          <h1 class="font-display text-2xl font-bold text-slate-900">คำนวณสายเมน (สายประธาน)</h1>
+          <p class="text-sm text-slate-500 mt-1">คำนวณขนาดหม้อแปลง สายไฟ เบรกเกอร์ ท่อร้อยสาย และสายดิน สำหรับสายเมนของอาคารจากโหลดรวม</p>
+        </div>
+
+        <!-- Theory -->
+        <details class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm group open:pb-5">
+          <summary class="cursor-pointer select-none px-5 py-4 font-semibold text-slate-700 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25278V19.25M12 6.25278C10.8321 5.47686 9.24649 5 7.5 5C5.75351 5 4.16789 5.47686 3 6.25278V19.25C4.16789 18.4741 5.75351 18 7.5 18C9.24649 18 10.8321 18.4741 12 19.25M12 6.25278C13.1679 5.47686 14.7535 5 16.5 5C18.2465 5 19.8321 5.47686 21 6.25278V19.25C19.8321 18.4741 18.2465 18 16.5 18C14.7535 18 13.1679 18.4741 12 19.25"/></svg>
+              หลักการและสูตรที่ใช้คำนวณ
+            </span>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 text-sm text-slate-600 space-y-3 border-t border-slate-100 pt-4">
+            <p><span class="font-semibold text-slate-700">1) โหลดรวม + เผื่อหม้อแปลง:</span> กรอกโหลดรวม (VA) ของอาคาร แล้วเผื่อหม้อแปลงคงที่ 130% ของโหลดรวม</p>
+            <p><span class="font-semibold text-slate-700">2) ขนาดหม้อแปลง:</span> ปัดโหลดที่เผื่อหม้อแปลงแล้วขึ้นเป็นขนาดหม้อแปลงมาตรฐานที่เล็กที่สุดที่ไม่น้อยกว่าที่ต้องการ</p>
+            <p><span class="font-semibold text-slate-700">3) กระแสโหลด:</span> ระบบ 1 เฟส ใช้ I = P / V, ระบบ 3 เฟส ใช้ I = P / (√3 × V) โดย P คือขนาดหม้อแปลงที่เลือกได้</p>
+            <p><span class="font-semibold text-slate-700">4) กระแสออกแบบ:</span> ขนาดสายไฟและเบรกเกอร์ต้องไม่น้อยกว่า 125% ของกระแสโหลด (I<sub>design</sub> = 1.25 × I)</p>
+            <p><span class="font-semibold text-slate-700">5) ขนาดสายไฟและเบรกเกอร์:</span> เลือกจากตารางพิกัดกระแสตามชนิดสาย (NYY 70°C หรือ CV 90°C) และลักษณะการเดินสาย ได้แก่ กลุ่มที่ 3 (เกาะผนังในอากาศ, ตารางที่ 5-21), กลุ่มที่ 5/6 (ร้อยท่อฝังดิน/ฝังดินโดยตรง, ตารางที่ 5-23 หรือ 5-29) หรือกลุ่มที่ 7 (วางบนรางเคเบิล, ตารางที่ 5-30 ถึง 5-33) เบรกเกอร์ไม่จำกัดขนาดเฟรมที่ 100A เพราะสายเมนมักต้องใช้พิกัดสูง แสดงผล 2 รูปแบบให้เทียบกัน คือ "เส้นเดียวต่อเฟส" และ "หลายเส้นขนานต่อเฟส" (เมื่อกระแสออกแบบสูงเกินกว่าสายเส้นเดียวจะรับไหว)</p>
+            <p><span class="font-semibold text-slate-700">6) ขนาดท่อร้อยสาย:</span> คำนวณให้เฉพาะกลุ่มที่ 5 (ร้อยท่อฝังดิน) เท่านั้น โดยอ้างอิงตาราง A-2</p>
+            <p><span class="font-semibold text-slate-700">7) ขนาดสายดิน (G):</span> เลือกขนาดต่ำสุดของสายดินตัวนำทองแดงจากตารางที่ 6.2 ตามพิกัดเบรกเกอร์ที่เลือกได้</p>
+          </div>
+        </details>
+
+        <div class="mt-5 bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm rounded-xl p-4 flex gap-3">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          <p>ยังไม่รวมการคำนวณขนาดสายต่อหลักดิน (ตารางที่ 6.1) และขนาดรางเดินสายไฟ (สูตรเส้นผ่าศูนย์กลางสาย) เนื่องจากยังไม่มีข้อมูลตารางครบถ้วน จะเพิ่มให้ภายหลัง</p>
+        </div>
+
+        <div class="mt-5 grid lg:grid-cols-2 gap-5 items-start">
+          <!-- Input form -->
+          <div class="space-y-5">
+
+            <!-- Load -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ข้อมูลโหลดในวงจร</h2>
+
+              <span class="block text-sm text-slate-600 mb-1.5">ระบบไฟฟ้า</span>
+              <div id="mainPhase" class="grid grid-cols-2 gap-2"></div>
+
+              <div class="grid grid-cols-2 gap-3 mt-3">
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">แรงดันไฟฟ้า (V)</span>
+                  <input id="mainVoltage" type="number" value="400" min="1" class="calc-input" />
+                </label>
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1">กำลังไฟฟ้ารวม (VA)</span>
+                  <input id="mainVa" type="number" min="0" placeholder="เช่น 357000" class="calc-input" />
+                </label>
+              </div>
+
+              <p class="mt-3 text-xs text-slate-400">หมายเหตุ: กรอกผลรวมกำลังไฟฟ้า (A+B+C) ของอาคารทั้งหมด ระบบจะเผื่อหม้อแปลง 130% และปัดขึ้นเป็นขนาดหม้อแปลงมาตรฐานให้อัตโนมัติ (กรณีต้องการคิดตัวคูณความต้องการใช้ไฟ/Demand Factor ใช้เครื่องมือด้านล่างช่วยคำนวณ แล้วกดปุ่ม "ใช้ผลรวมนี้" เพื่อนำมากรอกในช่องนี้ได้)</p>
+            </div>
+
+            <!-- Installation method -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+              <h2 class="font-semibold text-slate-800 mb-4">ลักษณะการเดินสายไฟ</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <span class="block text-sm text-slate-600 mb-1.5">ชนิดสายไฟ</span>
+                  <div id="mainCableType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <label class="text-sm block">
+                  <span class="block text-slate-600 mb-1.5">ลักษณะการติดตั้ง (กลุ่มที่)</span>
+                  <select id="mainGroup" class="calc-input"></select>
+                  <span id="mainGroupDesc" class="block text-xs text-slate-400 mt-1.5"></span>
+                </label>
+
+                <div id="mainTrayShapeWrap" class="hidden">
+                  <label class="text-sm block">
+                    <span class="block text-slate-600 mb-1.5">รูปแบบรางเคเบิล</span>
+                    <select id="mainTrayShape" class="calc-input"></select>
+                  </label>
+
+                  <label class="text-sm block mt-4">
+                    <span class="block text-slate-600 mb-1.5">รูปแบบการติดตั้งบนราง</span>
+                    <select id="mainTrayArrangement" class="calc-input"></select>
+                  </label>
+                </div>
+
+                <div id="mainCountWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">จำนวนตัวนำกระแส</span>
+                  <div id="mainCount" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <p id="mainFixedCountNote" class="hidden text-xs text-slate-400"></p>
+
+                <div id="mainCoreTypeWrap">
+                  <span class="block text-sm text-slate-600 mb-1.5">ลักษณะตัวนำกระแส</span>
+                  <div id="mainCoreType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+
+                <div id="mainInsulationTypeWrap" class="hidden">
+                  <span class="block text-sm text-slate-600 mb-1.5">ประเภทฉนวน</span>
+                  <div id="mainInsulationType" class="grid grid-cols-2 gap-2"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Result -->
+          <div id="mainResult" class="space-y-4"></div>
+        </div>
+
+        <!-- Demand factor summary -->
+        <div class="mt-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-5">
+          <h2 class="font-semibold text-slate-800 mb-1">สรุปดีมานด์โหลดรวม (ตัวช่วย)</h2>
+          <p class="text-xs text-slate-400 mb-4">นำผลดีมานด์โหลดที่คำนวณไว้จากแต่ละหน้าวงจรย่อย (ตารางที่ 9.1-9.3) มารวมกันที่นี่ แล้วกดปุ่มเพื่อนำผลรวมไปกรอกเป็น "กำลังไฟฟ้ารวม (VA)" ด้านบนได้ทันที</p>
+
+          <div class="grid sm:grid-cols-2 gap-3">
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดแสงสว่าง (VA)</span>
+              <input id="mainDfLighting" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเต้ารับ (VA)</span>
+              <input id="mainDfOutlet" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเครื่องทำน้ำอุ่น (VA)</span>
+              <input id="mainDfHeater" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">ดีมานด์โหลดเครื่องปรับอากาศ (VA)</span>
+              <input id="mainDfAc" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+            <label class="text-sm block">
+              <span class="block text-slate-600 mb-1">โหลดดีมานด์อื่นๆ (VA)</span>
+              <input id="mainDfOther" type="number" min="0" placeholder="0" class="calc-input" />
+            </label>
+          </div>
+
+          <div id="mainDfResult" class="mt-3"></div>
+
+          <button id="mainDfApplyBtn" type="button" class="mt-3 w-full sm:w-auto text-sm font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-100 rounded-xl px-5 py-2.5 transition-colors">
+            ใช้ผลรวมนี้เป็นกำลังไฟฟ้ารวม
+          </button>
+        </div>
+      </section>
 
     </main>
   </div>
 
   <script src="js/lib/tablePicker.js"></script>
   <script src="js/lib/circuitCalc.js"></script>
+  <script src="js/lib/demandFactorWidget.js"></script>
+  <script src="js/data/demandFactorTable.js"></script>
   <script src="js/data/wireTable.js"></script>
   <script src="js/data/conduitFillTable.js"></script>
   <script src="js/data/breakerTable.js"></script>
   <script src="js/data/acLoadTable.js"></script>
+  <script src="js/data/groundWireTable.js"></script>
   <script src="js/data/installationGroups.js"></script>
+  <script src="js/data/feederGroups.js"></script>
+  <script src="js/data/mainGroups.js"></script>
   <script src="js/wireTable.js"></script>
   <script src="js/conduitFillTable.js"></script>
   <script src="js/breakerTable.js"></script>
   <script src="js/acLoadTable.js"></script>
+  <script src="js/groundWireTable.js"></script>
   <script src="js/lightingCircuit.js"></script>
   <script src="js/outletCircuit.js"></script>
   <script src="js/heaterCircuit.js"></script>
   <script src="js/acCircuit.js"></script>
+  <script src="js/feederCircuit.js"></script>
+  <script src="js/mainCircuit.js"></script>
+  <script src="js/demandFactorInit.js"></script>
   <script src="js/placeholders.js"></script>
   <script src="js/app.js"></script>
 </body>

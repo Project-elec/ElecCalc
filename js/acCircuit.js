@@ -183,11 +183,8 @@
     const countLabel = GROUPS_WITH_CONDUCTOR_COUNT.includes(state.group) ? `, ${state.count} ตัวนำ` : '';
 
     const conductorCount = GROUPS_WITH_CONDUCTOR_COUNT.includes(state.group) ? state.count : 2;
-    const conduit =
-      result.wire && state.coreType === 'single'
-        ? pickConduitSize(CONDUIT_FILL_TABLES, state.cableType, result.wire.size, conductorCount)
-        : null;
-    if (result.wire && state.coreType === 'single' && !conduit) {
+    const conduit = result.wire ? pickConduitSize(CONDUIT_FILL_TABLES, state.cableType, result.wire.size, conductorCount) : null;
+    if (result.wire && !conduit) {
       warnings.push(`ไม่มีข้อมูลขนาดท่อร้อยสายสำหรับสาย ${result.wire.size} ตร.มม. ในตาราง ${state.cableType === 'IEC01' ? 'A-1' : 'A-2'}`);
     }
 
@@ -233,7 +230,7 @@
       <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 text-center">
         <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-1">ขนาดท่อร้อยสายแนะนำ</p>
         <p class="text-2xl font-display font-bold text-indigo-700">${conduit.mm} <span class="text-sm font-sans font-medium">(${conduit.inch})</span></p>
-        <p class="text-xs text-slate-500 mt-1">รองรับสายแกนเดี่ยว ${conductorCount} เส้น (${conduit.table.code})</p>
+        <p class="text-xs text-slate-500 mt-1">รองรับสาย ${conductorCount} เส้น, ลักษณะตัวนำ${coreTypeLabel} (${conduit.table.code})</p>
       </div>
       `
           : ''

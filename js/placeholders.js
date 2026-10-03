@@ -3,20 +3,7 @@
  * ใช้ config เดียวกันเพื่อลดโค้ดซ้ำ และเพิ่มหน้าใหม่ได้ง่ายในอนาคต
  */
 (function () {
-  const PLACEHOLDERS = [
-    {
-      id: 'page-calc-feeder',
-      title: 'คำนวณสายป้อน',
-      desc: 'คำนวณขนาดสายป้อน (Feeder) ที่รวมโหลดจากวงจรย่อยหลายวงจรก่อนเข้าแผงย่อย',
-      color: 'slate',
-    },
-    {
-      id: 'page-calc-main',
-      title: 'คำนวณสายเมน (สายประธาน)',
-      desc: 'คำนวณขนาดสายเมน (Main/Service) ของอาคารจากผลรวมโหลดทั้งหมด',
-      color: 'slate',
-    },
-  ];
+  const PLACEHOLDERS = [];
 
   PLACEHOLDERS.forEach(({ id, title, desc, color }) => {
     const section = document.getElementById(id);

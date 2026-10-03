@@ -10,10 +10,15 @@
   const groupDescEl = document.getElementById('lightingGroupDesc');
   const trayTypeWrap = document.getElementById('lightingTrayTypeWrap');
   const trayTypeEl = document.getElementById('lightingTrayType');
+  const trayArrangementEl = document.getElementById('lightingTrayArrangement');
+  const arrangementWrap = document.getElementById('lightingArrangementWrap');
+  const arrangementEl = document.getElementById('lightingArrangement');
+  const arrangementNoteEl = document.getElementById('lightingArrangementNote');
   const countWrap = document.getElementById('lightingCountWrap');
   const countEl = document.getElementById('lightingCount');
+  const fixedCountNoteEl = document.getElementById('lightingFixedCountNote');
+  const coreTypeWrap = document.getElementById('lightingCoreTypeWrap');
   const coreTypeEl = document.getElementById('lightingCoreType');
-  const coreNoteEl = document.getElementById('lightingCoreNote');
   const rowsContainer = document.getElementById('lightingRows');
   const addRowBtn = document.getElementById('lightingAddRow');
   const voltageInput = document.getElementById('lightingVoltage');
@@ -33,7 +38,15 @@
     return;
   }
 
-  const state = { cableType: 'IEC01', group: 1, count: 2, coreType: 'single', trayType: TRAY_TYPES[0].id };
+  const state = {
+    cableType: 'IEC01',
+    group: 1,
+    count: 2,
+    coreType: 'single',
+    trayType: TRAY_TYPES[0].id,
+    arrangement: 'vertical',
+    trayArrangementCol: null,
+  };
   const { sizes: STANDARD_BREAKER_SIZES, rows: BREAKER_ROWS } = getStandardBreakerSizes(CIRCUIT_BREAKER_TABLE);
 
   function renderToggleGroup(container, options, activeValue, onSelect) {
@@ -77,8 +90,49 @@
     if (state.group === 7 && trayTypeEl.innerHTML === '') {
       trayTypeEl.innerHTML = TRAY_TYPES.map((t) => `<option value="${t.id}">${t.label}</option>`).join('');
     }
+    if (state.group === 7) {
+      renderTrayArrangementOptions();
+    }
     countWrap.classList.toggle('hidden', !GROUPS_WITH_CONDUCTOR_COUNT.includes(state.group));
+    fixedCountNoteEl.classList.toggle('hidden', !GROUPS_WITH_FIXED_COUNT_NOTE.includes(state.group));
+    if (state.group === 3) {
+      fixedCountNoteEl.textContent = 'ลักษณะสายกลม จำนวนตัวนำกระแสไม่เกิน 3 เส้น ประเภทฉนวนพีวีซี (PVC) 70°C';
+    } else if (state.group === 6) {
+      fixedCountNoteEl.textContent = 'จำนวนตัวนำกระแสไม่เกิน 3 เส้น (สายฝังดินโดยตรง ค่าพิกัดกระแสเท่ากันทั้งแกนเดี่ยวและหลายแกน)';
+    }
+    arrangementWrap.classList.toggle('hidden', state.group !== 4);
+    renderArrangementButtons();
     renderCountButtons();
+  }
+
+  function renderArrangementButtons() {
+    renderToggleGroup(
+      arrangementEl,
+      [
+        { value: 'vertical', label: 'แนวดิ่ง (ขนานผนัง)' },
+        { value: 'horizontal', label: 'แนวนอน (ตั้งฉากออกจากผนัง)' },
+      ],
+      state.arrangement,
+      (value) => {
+        state.arrangement = value;
+        renderArrangementButtons();
+        calculate();
+      }
+    );
+    arrangementNoteEl.textContent =
+      state.arrangement === 'horizontal'
+        ? 'วางสายเรียงกันในแนวนอน ยื่นตั้งฉากออกมาจากผนัง เช่น วางบนแร็คหรือชั้นวาง'
+        : 'วางสายเรียงกันในแนวดิ่ง ขนานไปกับผนัง';
+  }
+
+  function renderTrayArrangementOptions() {
+    const options = (TRAY_ARRANGEMENTS[state.trayType] || []).filter((a) => a.coreType === state.coreType);
+    if (!options.some((a) => a.col === state.trayArrangementCol)) {
+      state.trayArrangementCol = options.length ? options[0].col : null;
+    }
+    trayArrangementEl.innerHTML = options
+      .map((a) => `<option value="${a.col}" ${a.col === state.trayArrangementCol ? 'selected' : ''}>${a.label}</option>`)
+      .join('');
   }
 
   function renderCountButtons() {
@@ -100,26 +154,28 @@
   }
 
   function renderCoreTypeButtons() {
-    const multiAvailable = getWireColumnSpec(state.group, state.count, 'multi', state.trayType) !== null;
+    const multiAvailable = getWireColumnSpec(state.group, state.count, 'multi', state.trayType, state.arrangement) !== null;
     if (!multiAvailable && state.coreType === 'multi') {
       state.coreType = 'single';
     }
-    renderToggleGroup(
-      coreTypeEl,
-      [
-        { value: 'single', label: 'แกนเดี่ยว' },
-        { value: 'multi', label: 'หลายแกน', disabled: !multiAvailable },
-      ],
-      state.coreType,
-      (value) => {
-        state.coreType = value;
-        renderCoreTypeButtons();
-        calculate();
-      }
-    );
-    coreNoteEl.classList.toggle('hidden', multiAvailable);
-    if (!multiAvailable) {
-      coreNoteEl.textContent = 'ลักษณะการติดตั้งนี้มีข้อมูลเฉพาะสายแกนเดี่ยวเท่านั้น';
+    coreTypeWrap.classList.toggle('hidden', !multiAvailable);
+    if (multiAvailable) {
+      renderToggleGroup(
+        coreTypeEl,
+        [
+          { value: 'single', label: 'แกนเดี่ยว' },
+          { value: 'multi', label: 'หลายแกน' },
+        ],
+        state.coreType,
+        (value) => {
+          state.coreType = value;
+          renderCoreTypeButtons();
+          calculate();
+        }
+      );
+    }
+    if (state.group === 7) {
+      renderTrayArrangementOptions();
     }
   }
 
@@ -130,7 +186,13 @@
 
   trayTypeEl.addEventListener('change', () => {
     state.trayType = trayTypeEl.value;
+    state.trayArrangementCol = null;
     renderCoreTypeButtons();
+    calculate();
+  });
+
+  trayArrangementEl.addEventListener('change', () => {
+    state.trayArrangementCol = parseInt(trayArrangementEl.value, 10);
     calculate();
   });
 
@@ -166,7 +228,7 @@
   }
 
   function resolveWireAndBreaker(designCurrent) {
-    const spec = getWireColumnSpec(state.group, state.count, state.coreType, state.trayType);
+    const spec = getWireColumnSpec(state.group, state.count, state.coreType, state.trayType, state.arrangement, state.trayArrangementCol);
     if (!spec) return { error: 'ไม่มีข้อมูลตารางพิกัดกระแสสำหรับตัวเลือกนี้' };
 
     const table = WIRE_TABLES.find((t) => t.id === spec.tableId);
@@ -212,13 +274,14 @@
 
     const coreTypeLabel = state.coreType === 'single' ? 'แกนเดี่ยว' : 'หลายแกน';
     const countLabel = GROUPS_WITH_CONDUCTOR_COUNT.includes(state.group) ? `, ${state.count} ตัวนำ` : '';
+    const arrangementLabel = state.group === 4 ? `, วางสาย${state.arrangement === 'horizontal' ? 'แนวนอน' : 'แนวดิ่ง'}` : '';
+    const trayArrangementOption =
+      state.group === 7 ? (TRAY_ARRANGEMENTS[state.trayType] || []).find((a) => a.col === state.trayArrangementCol) : null;
+    const trayArrangementLabel = trayArrangementOption ? `, ${trayArrangementOption.label}` : '';
 
     const conductorCount = GROUPS_WITH_CONDUCTOR_COUNT.includes(state.group) ? state.count : 2;
-    const conduit =
-      result.wire && state.coreType === 'single'
-        ? pickConduitSize(CONDUIT_FILL_TABLES, state.cableType, result.wire.size, conductorCount)
-        : null;
-    if (result.wire && state.coreType === 'single' && !conduit) {
+    const conduit = result.wire ? pickConduitSize(CONDUIT_FILL_TABLES, state.cableType, result.wire.size, conductorCount) : null;
+    if (result.wire && !conduit) {
       warnings.push(`ไม่มีข้อมูลขนาดท่อร้อยสายสำหรับสาย ${result.wire.size} ตร.มม. ในตาราง ${state.cableType === 'IEC01' ? 'A-1' : 'A-2'}`);
     }
 
@@ -264,14 +327,14 @@
       <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 text-center">
         <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-1">ขนาดท่อร้อยสายแนะนำ</p>
         <p class="text-2xl font-display font-bold text-indigo-700">${conduit.mm} <span class="text-sm font-sans font-medium">(${conduit.inch})</span></p>
-        <p class="text-xs text-slate-500 mt-1">รองรับสายแกนเดี่ยว ${conductorCount} เส้น (${conduit.table.code})</p>
+        <p class="text-xs text-slate-500 mt-1">รองรับสาย ${conductorCount} เส้น, ลักษณะตัวนำ${coreTypeLabel} (${conduit.table.code})</p>
       </div>
       `
           : ''
       }
 
       <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-500">
-        อ้างอิงพิกัดกระแสจาก <span class="font-semibold text-slate-700">${result.table.code}</span> — สาย ${state.cableType}, กลุ่มที่ ${state.group} (${INSTALLATION_GROUPS[state.group]})${countLabel}, ลักษณะตัวนำ${coreTypeLabel}
+        อ้างอิงพิกัดกระแสจาก <span class="font-semibold text-slate-700">${result.table.code}</span> — สาย ${state.cableType}, กลุ่มที่ ${state.group} (${INSTALLATION_GROUPS[state.group]})${countLabel}, ลักษณะตัวนำ${coreTypeLabel}${arrangementLabel}${trayArrangementLabel}
       </div>
       `
           : ''

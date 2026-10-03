@@ -395,8 +395,8 @@ const WIRE_TABLES = [
     headerRows: [
       [{ label: 'กลุ่มที่ 7', colspan: 4 }],
       [
-        { label: 'แกนเดี่ยว', colspan: 2 },
-        { label: 'หลายแกน', colspan: 2 },
+        { label: 'แกนเดี่ยว', colspan: 3 },
+        { label: 'หลายแกน', colspan: 1 },
       ],
       [
         {
@@ -478,8 +478,8 @@ const WIRE_TABLES = [
     headerRows: [
       [{ label: 'กลุ่มที่ 7', colspan: 4 }],
       [
-        { label: 'แกนเดี่ยว', colspan: 2 },
-        { label: 'หลายแกน', colspan: 2 },
+        { label: 'แกนเดี่ยว', colspan: 3 },
+        { label: 'หลายแกน', colspan: 1 },
       ],
       [
         {
