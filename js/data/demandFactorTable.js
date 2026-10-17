@@ -11,10 +11,10 @@
 // ตารางที่ 9.1 ดีมานด์แฟกเตอร์สำหรับโหลดแสงสว่าง
 const LIGHTING_DEMAND_FACTOR_TABLE = [
   { id: 'residential', label: 'ที่พักอาศัย', tiers: [{ upTo: 2000, percent: 100 }, { upTo: Infinity, percent: 35 }] },
-  { id: 'hospital', label: 'โรงพยาบาล', tiers: [{ upTo: 50000, percent: 40 }, { upTo: Infinity, percent: 20 }] },
+  { id: 'hospital', label: 'โรงพยาบาล *', tiers: [{ upTo: 50000, percent: 40 }, { upTo: Infinity, percent: 20 }] },
   {
     id: 'hotel',
-    label: 'โรงแรม/ห้องชุด (ไม่มีส่วนให้ผู้อยู่อาศัยประกอบอาหารได้)',
+    label: 'โรงแรม/ห้องชุด (ไม่มีส่วนให้ผู้อยู่อาศัยประกอบอาหารได้) *',
     tiers: [
       { upTo: 20000, percent: 50 },
       { upTo: 100000, percent: 40 },

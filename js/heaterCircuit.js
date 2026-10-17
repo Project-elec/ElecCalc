@@ -15,6 +15,8 @@
   const voltageInput = document.getElementById('heaterVoltage');
   const vaInput = document.getElementById('heaterVa');
   const resultEl = document.getElementById('heaterResult');
+  const rawSaveToggleEl = document.getElementById('heaterRawSaveToggle');
+  const rawSaveNoteEl = document.getElementById('heaterRawSaveNote');
 
   if (
     !groupEl ||
@@ -131,7 +133,18 @@
           กรอกกำลังไฟฟ้าเครื่องทำน้ำอุ่นเพื่อเริ่มคำนวณ
         </div>
       `;
+      if (rawSaveNoteEl) rawSaveNoteEl.textContent = '';
       return;
+    }
+
+    if (rawSaveNoteEl) {
+      const shouldSaveRaw = Boolean(rawSaveToggleEl && rawSaveToggleEl.checked);
+      if (shouldSaveRaw && typeof saveRawLoadValue === 'function') {
+        saveRawLoadValue('heater', totalVa);
+      }
+      rawSaveNoteEl.textContent = shouldSaveRaw
+        ? 'บันทึกค่านี้ไว้แล้ว — ไปกรอกอัตโนมัติที่การ์ด "สรุปโหลดรวม (ไม่ผ่าน Demand Factor)" ในหน้าสายป้อน/สายเมนให้'
+        : 'ยังไม่ได้บันทึก — ติ๊กเลือกด้านบนถ้าต้องการบันทึกและส่งค่านี้ไปหน้าสายป้อน/สายเมน';
     }
 
     const result = resolveWireAndBreaker(designCurrent);
@@ -203,6 +216,11 @@
         <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <p>วงจรเครื่องทำน้ำอุ่นควรแยกวงจรเฉพาะ ไม่ต่อร่วมกับโหลดอื่น และต้องติดตั้งเครื่องตัดไฟรั่ว (ELCB/RCD) เพราะเป็นอุปกรณ์ที่ใช้งานใกล้น้ำ</p>
       </div>
+
+      <button type="button" class="panel-add-btn w-full text-sm font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-100 rounded-xl py-2.5 transition-colors flex items-center justify-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+        เพิ่มลงตารางโหลดแผงย่อย
+      </button>
       `
           : ''
       }
@@ -223,10 +241,35 @@
           : ''
       }
     `;
+
+    const panelAddBtn = resultEl.querySelector('.panel-add-btn');
+    if (panelAddBtn && typeof addPanelScheduleRow === 'function') {
+      panelAddBtn.addEventListener('click', () => {
+        const added = addPanelScheduleRow({
+          description: 'วงจรย่อยเครื่องทำน้ำอุ่น',
+          loadVa: totalVa,
+          cbPole: '1P',
+          cbAt: result.breaker,
+          cableSize: result.wire.size,
+          cableType: CABLE_TYPE,
+          conduit: conduit ? `${conduit.mm} (${conduit.inch})` : '-',
+        });
+        if (added) {
+          panelAddBtn.textContent = '✓ เพิ่มลงตารางแล้ว';
+          panelAddBtn.disabled = true;
+          panelAddBtn.classList.add('opacity-60', 'cursor-default');
+        } else {
+          panelAddBtn.textContent = '✕ ตารางเต็มแล้ว (ไปขยายขนาดช่อง)';
+        }
+      });
+    }
   }
 
   vaInput.addEventListener('input', calculate);
   voltageInput.addEventListener('input', calculate);
+  if (rawSaveToggleEl) {
+    rawSaveToggleEl.addEventListener('change', calculate);
+  }
 
   renderGroupOptions();
   calculate();

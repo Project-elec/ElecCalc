@@ -18,6 +18,8 @@
   const coreNoteEl = document.getElementById('acCoreNote');
   const voltageInput = document.getElementById('acVoltage');
   const resultEl = document.getElementById('acResult');
+  const rawSaveToggleEl = document.getElementById('acRawSaveToggle');
+  const rawSaveNoteEl = document.getElementById('acRawSaveNote');
 
   if (
     !cableTypeEl ||
@@ -172,6 +174,20 @@
 
     kvaNoteEl.textContent = acRow ? `โหลดไฟฟ้า ${acRow.kva.toLocaleString()} kVA (${acRow.tr} ตันความเย็น) — อ้างอิงตารางที่ 7.4` : '';
 
+    if (rawSaveNoteEl) {
+      if (totalVa > 0) {
+        const shouldSaveRaw = Boolean(rawSaveToggleEl && rawSaveToggleEl.checked);
+        if (shouldSaveRaw && typeof saveRawLoadValue === 'function') {
+          saveRawLoadValue('ac', totalVa);
+        }
+        rawSaveNoteEl.textContent = shouldSaveRaw
+          ? 'บันทึกค่านี้ไว้แล้ว — ไปกรอกอัตโนมัติที่การ์ด "สรุปโหลดรวม (ไม่ผ่าน Demand Factor)" ในหน้าสายป้อน/สายเมนให้'
+          : 'ยังไม่ได้บันทึก — ติ๊กเลือกด้านบนถ้าต้องการบันทึกและส่งค่านี้ไปหน้าสายป้อน/สายเมน';
+      } else {
+        rawSaveNoteEl.textContent = '';
+      }
+    }
+
     const result = resolveWireAndBreaker(designCurrent);
 
     const warnings = [];
@@ -239,6 +255,11 @@
       <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-500">
         อ้างอิงพิกัดกระแสจาก <span class="font-semibold text-slate-700">${result.table.code}</span> — สาย ${state.cableType}, กลุ่มที่ ${state.group} (${INSTALLATION_GROUPS[state.group]})${countLabel}, ลักษณะตัวนำ${coreTypeLabel}
       </div>
+
+      <button type="button" class="panel-add-btn w-full text-sm font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-100 rounded-xl py-2.5 transition-colors flex items-center justify-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 4v16m8-8H4"/></svg>
+        เพิ่มลงตารางโหลดแผงย่อย
+      </button>
       `
           : ''
       }
@@ -259,9 +280,34 @@
           : ''
       }
     `;
+
+    const panelAddBtn = resultEl.querySelector('.panel-add-btn');
+    if (panelAddBtn && typeof addPanelScheduleRow === 'function') {
+      panelAddBtn.addEventListener('click', () => {
+        const added = addPanelScheduleRow({
+          description: `เครื่องปรับอากาศ ${state.btuh.toLocaleString()} BTU`,
+          loadVa: totalVa,
+          cbPole: '1P',
+          cbAt: result.breaker,
+          cableSize: result.wire.size,
+          cableType: state.cableType,
+          conduit: conduit ? `${conduit.mm} (${conduit.inch})` : '-',
+        });
+        if (added) {
+          panelAddBtn.textContent = '✓ เพิ่มลงตารางแล้ว';
+          panelAddBtn.disabled = true;
+          panelAddBtn.classList.add('opacity-60', 'cursor-default');
+        } else {
+          panelAddBtn.textContent = '✕ ตารางเต็มแล้ว (ไปขยายขนาดช่อง)';
+        }
+      });
+    }
   }
 
   voltageInput.addEventListener('input', calculate);
+  if (rawSaveToggleEl) {
+    rawSaveToggleEl.addEventListener('change', calculate);
+  }
 
   renderBtuButtons();
   renderCableTypeButtons();

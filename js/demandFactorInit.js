@@ -18,6 +18,7 @@
   const rowsContainer = document.getElementById('heaterDfRows');
   const addRowBtn = document.getElementById('heaterDfAddRow');
   const resultEl = document.getElementById('heaterDfResult');
+  const saveToggleEl = document.getElementById('heaterDfSaveToggle');
   if (!rowsContainer || !addRowBtn || !resultEl || typeof calcWaterHeaterDemandVa === 'undefined') return;
 
   let rowIdCounter = 0;
@@ -37,6 +38,11 @@
     }
 
     const { demandVa, topVa, restVa, restDemandVa, topCount, restCount } = calcWaterHeaterDemandVa(vaList);
+    const shouldSave = Boolean(saveToggleEl && saveToggleEl.checked);
+
+    if (shouldSave && typeof saveDemandFactorValue === 'function') {
+      saveDemandFactorValue('heater', demandVa);
+    }
 
     resultEl.innerHTML = `
       <div class="bg-lime-50 border border-lime-100 rounded-xl p-4">
@@ -50,6 +56,11 @@
               : ''
           }
         </ul>
+        <p class="text-xs ${shouldSave ? 'text-lime-600' : 'text-slate-400'} mt-2">${
+          shouldSave
+            ? 'บันทึกค่านี้ไว้แล้ว — ไปกรอกอัตโนมัติที่การ์ด "สรุปดีมานด์โหลดรวม" ในหน้าสายป้อน/สายเมนให้'
+            : 'ยังไม่ได้บันทึก — ติ๊กเลือกด้านบนถ้าต้องการบันทึกและส่งค่านี้ไปหน้าสายป้อน/สายเมน'
+        }</p>
       </div>
     `;
   }
@@ -77,6 +88,10 @@
     calculate();
   });
 
+  if (saveToggleEl) {
+    saveToggleEl.addEventListener('change', calculate);
+  }
+
   addRow();
   addRow();
   calculate();
@@ -85,6 +100,9 @@
 // สรุปดีมานด์โหลดรวม สำหรับหน้าสายป้อน/สายเมน: รวมค่าดีมานด์โหลดที่คำนวณแยกไว้แต่ละหมวด
 // แล้วกดปุ่มเพื่อนำผลรวมไปกรอกใน "กำลังไฟฟ้ารวม (VA)" ของเครื่องคำนวณหลักได้ทันที (ไม่ได้แทนที่
 // ช่องกรอกเดิม แค่ช่วยรวมเลขให้ ผู้ใช้ยังแก้ไขค่าสุดท้ายในช่อง VA รวมได้เองตามปกติ)
+//
+// ที่เริ่มต้น ถ้าช่องไหนยังว่างอยู่ จะดึงค่าที่เคยบันทึกไว้จากหน้าวงจรย่อยนั้นๆ (ผ่าน localStorage,
+// ดู js/lib/demandFactorStorage.js) มาเติมให้อัตโนมัติ เพื่อไม่ต้องย้อนไปคัดลอกตัวเลขเองทุกครั้ง
 (function () {
   function initSummary(prefix, targetVaInputId) {
     const categories = ['Lighting', 'Outlet', 'Heater', 'Ac', 'Other'];
@@ -93,6 +111,18 @@
     const applyBtn = document.getElementById(`${prefix}DfApplyBtn`);
     const targetInput = document.getElementById(targetVaInputId);
     if (!resultEl || !applyBtn || !targetInput || inputs.some((el) => !el)) return;
+
+    if (typeof loadDemandFactorValue === 'function') {
+      categories.forEach((c, i) => {
+        if (c === 'Other') return;
+        const input = inputs[i];
+        if (input.value !== '') return;
+        const saved = loadDemandFactorValue(c.charAt(0).toLowerCase() + c.slice(1));
+        if (saved !== null && !Number.isNaN(saved)) {
+          input.value = Math.round(saved);
+        }
+      });
+    }
 
     let total = 0;
 

@@ -9,12 +9,14 @@
     'breaker-table',
     'ac-load-table',
     'ground-wire-table',
+    'demand-factor-table',
     'calc-lighting',
     'calc-outlet',
     'calc-heater',
     'calc-ac',
     'calc-feeder',
     'calc-main',
+    'panel-schedule',
   ];
   const DEFAULT_PAGE = 'home';
 
